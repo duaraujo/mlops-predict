@@ -9,7 +9,10 @@ import os
 from flask import Flask, request, jsonify
 from flask_basicauth import BasicAuth
 
-colunas = ['QuoteNumber', 'Field7', 'CoverageField6A', 'CoverageField6B', 'CoverageField8',
+# nao foi usado no treino
+# 'QuoteNumber', 'Field7', 'CoverageField6A', 
+
+colunas = ['CoverageField6B', 'CoverageField8',
             'CoverageField9', 'CoverageField11B', 'SalesField1A', 'SalesField1B', 'SalesField3',
             'SalesField4', 'SalesField5', 'PersonalField1', 'PersonalField2', 'PersonalField9',
             'PersonalField10A', 'PersonalField10B', 'PersonalField12', 'PropertyField34', 
@@ -32,8 +35,10 @@ def predict():
     # Pegar o JSON da requisição
     dados = request.get_json()
     payload = [dados[col] for col in colunas]
+    payload = xgb.DMatrix([payload], feature_names=colunas)
+    result = np.float64(modelo.predict(payload)[0])
 
-    return dados
+    return jsonify(resultado = result)
 
 # Rota padrão
 @app.route('/')
