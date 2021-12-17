@@ -16,15 +16,15 @@ colunas = ['QuoteNumber', 'Field7', 'CoverageField6A', 'CoverageField6B', 'Cover
             'PropertyField35',  'PropertyField37']
 
 app = Flask(__name__)
-app.config["BASIC_AUTH_USERNAME"] = os.environ.get('BASIC_AUTH_USERNAME')
-app.config["BASIC_AUTH_PASSWORD"] = os.environ.get('BASIC_AUTH_PASSWORD')
+app.config["BASIC_AUTH_USERNAME"] = 'admin'
+app.config["BASIC_AUTH_PASSWORD"] = '123'
 
 basic_auth = BasicAuth(app)
 
-def load_model(file_name = 'model.pkl'):
+def load_model(file_name = 'model_xgboost.pkl'):
     return pickle.load(open(file_name, "rb"))
 
-#modelo = load_model(file_name = '../../models/model.pkl')
+modelo = load_model(file_name = '../../models/model_xgboost.pkl')
 
 @app.route('/predict', methods=['POST'])
 @basic_auth.required
@@ -33,7 +33,7 @@ def predict():
     dados = request.get_json()
     payload = [dados[col] for col in colunas]
 
-    return payload
+    return dados
 
 # Rota padrão
 @app.route('/')
